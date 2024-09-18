@@ -16,17 +16,13 @@ int main() {
         map[aux]++;
     }
 
-    for (auto & [keyOne, valueOne] : map) {
-        int res = 1e9, aux;
-        for (auto & [keyTwo, valueTwo] : map) {
-            if (keyOne != keyTwo && keyTwo > keyOne) {
-                if (((keyTwo - keyOne) * valueOne) < res) {
-                    res = ((keyTwo - keyOne) * valueOne);
-                    aux = keyTwo;
-                }
-            }
-        }
-        dp.insert({res, {aux, keyOne}});
+    std::map<int, int>::iterator it;
+    for (it = map.begin(); it != map.end();) {
+        int a = (*it).first;
+        if (++it == map.end()) continue;
+        int b = (*it).first;
+        int diff = b - a;
+        dp.insert({diff, {b, a}});
     }
 
     while (map.size() != k) {
