@@ -1,4 +1,4 @@
-//nao finalizado
+//meia boca
 
 #include <iostream>
 #include <vector>
@@ -7,7 +7,7 @@
 #include <cstring>
 
 int const MAXN = 50100;
-int dist[MAXN], size[MAXN], d = 0, qtd = 0;
+int dist[MAXN], d = 0, qtd = 0;
 std::vector<bool> visitedDfs(MAXN, false);
 
 void bfs(int v, int n, std::vector<std::vector<int>> g) {
@@ -31,21 +31,6 @@ void bfs(int v, int n, std::vector<std::vector<int>> g) {
     }
 }
 
-void dfs(int v, int n, int dis, std::vector<std::vector<int>> g) {
-    int last = v;
-    visitedDfs[v] = true;
-    if (g[v].size() == 1 && dis == d) qtd++;
-    for (int i = 0; i < g[v].size(); i++) {
-        int curr = g[v][i];
-        
-        if (!visitedDfs[curr]) {
-            visitedDfs[curr] = true;
-            size[curr] = size[last] + 1;
-            dfs(curr, n, dis + 1, g);
-        }
-    }
-}
-
 int main() {
     int n;
     std::cin >> n;
@@ -59,7 +44,8 @@ int main() {
         graph[b].push_back(a);
     }
     bfs(1, n, graph);
-    int max = -1, v = 0;
+
+    int max = -1, v = 0, multi = 0;
     for (int i = 1; i <= n; i++) {
         if (dist[i] > max) {
             max = dist[i];
@@ -67,16 +53,19 @@ int main() {
         }
     }
     for (int i = 0; i <= n; i++) {
+        if (dist[i] == max) multi++;
         dist[i] = 0;
     }
+
     bfs(v, n, graph);
+    
     for (int i = 1; i <= n; i++) {
-        d = std::max(d, dist[i]);
+        if (dist[i] > d) {
+            d = dist[i];
+            qtd++;
+        }
     }
     d++;
-    for (int i = 1; i <= n; i++) {
-        visitedDfs.clear();
-        dfs(i, n, 1, graph);
-    }
-    std::cout << d << std::endl << qtd;
+    
+    std::cout << d << std::endl << qtd*multi;
 }
